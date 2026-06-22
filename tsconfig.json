@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2022"
+        ],
+        "outDir": "./public/assets/js",
+        "rootDir": "./src/ts",
+        "removeComments": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "types": [
+            "chrome"
+        ]
+    },
+    "include": [
+        "src/ts/**/*"
+    ]
+}

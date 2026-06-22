@@ -1,0 +1,16 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+
+# Local Development Generated Artifacts (Compiled via dev.js)
+public/manifest.json
+public/*.html
+public/assets/js/
+public/assets/css/
+
+# Production Distribution Bundles (Generated via npm run export)
+satin-simgos-*/
+
+# Operating System files
+.DS_Store
+Thumbs.db

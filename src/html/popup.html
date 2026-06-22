@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{NAME}}</title>
+        <link rel="stylesheet" href="assets/css/popup.css" />
+    </head>
+    <body>
+        <div id="app">
+            <insert-component-sidebar />
+
+            <main class="content-wrapper">
+                <insert-content-dashboard />
+            </main>
+
+            <footer>
+                <p>{{NAME}} - Running Version v{{VERSION}}</p>
+            </footer>
+        </div>
+
+        <script src="assets/js/popup.js" type="module"></script>
+    </body>
+</html>

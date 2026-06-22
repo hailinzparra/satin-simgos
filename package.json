@@ -1,0 +1,15 @@
+{
+    "type": "module",
+    "scripts": {
+        "init": "npm i",
+        "dev": "node dev/dev",
+        "export": "node dev/dev --prod"
+    },
+    "private": true,
+    "devDependencies": {
+        "@types/chrome": "^0.2.0",
+        "fs": "^0.0.1-security",
+        "sass": "^1.101.0",
+        "typescript": "^5.9.3"
+    }
+}
