@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import ts from 'typescript'
 import * as sass from 'sass'
+import { minify } from 'terser'
 import {
     path_resolve,
     path_relative,
@@ -173,23 +174,50 @@ const start = async () => {
     if (is_prod) {
         log(35, 'i prod:', `exporting production bundle to satin-simgos-${config.version}/`)
 
-        const tsconfigPath = ts.findConfigFile(path_resolve('../'), ts.sys.fileExists, 'tsconfig.json')
-        const configFile = ts.readConfigFile(tsconfigPath, ts.sys.readFile)
-        const parsedCommandLine = ts.parseJsonConfigFileContent(configFile.config, ts.sys, path_resolve('../'))
+        const tsconfig_path = ts.findConfigFile(path_resolve('../'), ts.sys.fileExists, 'tsconfig.json')
+        const config_file = ts.readConfigFile(tsconfig_path, ts.sys.readFile)
+        const parsed_command_line = ts.parseJsonConfigFileContent(config_file.config, ts.sys, path_resolve('../'))
 
-        parsedCommandLine.options.outDir = path.join(output_dir, 'assets/js')
-        parsedCommandLine.options.removeComments = true
+        const js_out_dir = path.join(output_dir, 'assets/js')
+        parsed_command_line.options.outDir = js_out_dir
+        parsed_command_line.options.removeComments = true
 
-        const program = ts.createProgram(parsedCommandLine.fileNames, parsedCommandLine.options)
+        const program = ts.createProgram(parsed_command_line.fileNames, parsed_command_line.options)
         program.emit()
         log(32, '+ ts:', 'production scripts compiled successfully.')
 
-        const prodImgDest = path.join(output_dir, 'assets/img')
-        copy_dir(path_resolve('../public/assets/img'), prodImgDest)
+        if (fs.existsSync(js_out_dir)) {
+            const compiled_files = fs.readdirSync(js_out_dir).filter(name => /\.js$/i.test(name))
+
+            for (const file of compiled_files) {
+                const filePath = path.join(js_out_dir, file)
+                const origCode = fs.readFileSync(filePath, 'utf8')
+
+                try {
+                    const minified = await minify(origCode, {
+                        mangle: true, // renames variables to single letters
+                        compress: {
+                            dead_code: true,
+                            drop_console: true,
+                            drop_debugger: true,
+                        }
+                    })
+                    if (minified.code) {
+                        fs.writeFileSync(filePath, minified.code)
+                        log(32, '+ minify:', `${file} compressed successfully.`)
+                    }
+                } catch (err) {
+                    log(31, 'x minify error:', `Failed to compress ${file}: ${err.message}`)
+                }
+            }
+        }
+
+        const prod_img_dest = path.join(output_dir, 'assets/img')
+        copy_dir(path_resolve('../public/assets/img'), prod_img_dest)
         log(32, '+ sync:', 'production img synchronized.')
 
-        const prodLibDest = path.join(output_dir, 'assets/lib')
-        copy_dir(path_resolve('../public/assets/lib'), prodLibDest)
+        const prod_lib_dest = path.join(output_dir, 'assets/lib')
+        copy_dir(path_resolve('../public/assets/lib'), prod_lib_dest)
         log(32, '+ sync:', 'production lib synchronized.')
 
         log(35, 'SUCCESS:', 'production package generated successfully.')
