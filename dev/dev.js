@@ -186,8 +186,13 @@ const start = async () => {
 
         const prodImgDest = path.join(output_dir, 'assets/img')
         copy_dir(path_resolve('../public/assets/img'), prodImgDest)
-        log(32, '+ sync:', 'production visual asset dependencies synchronized.')
-        log(35, 'SUCCESS:', 'production environment package generated successfully.')
+        log(32, '+ sync:', 'production img synchronized.')
+
+        const prodLibDest = path.join(output_dir, 'assets/lib')
+        copy_dir(path_resolve('../public/assets/lib'), prodLibDest)
+        log(32, '+ sync:', 'production lib synchronized.')
+
+        log(35, 'SUCCESS:', 'production package generated successfully.')
     } else {
         log(36, 'i ts:', 'start watching scripts')
         ts.createWatchProgram(
