@@ -26,7 +26,15 @@ const build_manifest = () => {
         "content_scripts": [
             {
                 "matches": config.targets,
-                "js": ["assets/js/database.js", "assets/js/content.js"],
+                "js": [
+                    "assets/lib/tailwind.min.js",
+                    "assets/lib/lz-string.min.js",
+                    "assets/lib/sweetalert2.all.min.js",
+                    "assets/lib/firebase-app-compat.js",
+                    "assets/lib/firebase-database-compat.js",
+                    "assets/js/database.js",
+                    "assets/js/content.js"
+                ],
                 "run_at": "document_end"
             }
         ],
